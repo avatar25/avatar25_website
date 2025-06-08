@@ -9,7 +9,7 @@ export default function Home() {
           Hi, I’m Shiben 👋
         </h1>
         <p className="mt-6 max-w-xl text-lg md:text-xl text-slate-200/90">
-          Cloud-sec engineer · Meditation nerd · Building cool stuff one vibe at a time.
+          Info-sec engineer · Meditation nerd · Building cool stuff one vibe at a time.
         </p>
       </main>
     </>
