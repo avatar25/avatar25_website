@@ -30,7 +30,7 @@ const TVStatic: React.FC<TVStaticProps> = ({
   animationSpeed = 60,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
 
   useEffect(() => {

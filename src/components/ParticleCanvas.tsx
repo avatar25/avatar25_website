@@ -87,7 +87,7 @@ export default function EnhancedParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePosition = useRef({ x: 0, y: 0 });
   const isMouseDown = useRef(false);
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
