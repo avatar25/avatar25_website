@@ -1,154 +1,109 @@
 "use client";
 import { useRef, useEffect } from "react";
 
-// Enhanced Configuration
-const PARTICLE_COUNT = 800;
-const BASE_SPEED = 0.12;
-const BOOST_SPEED = 5;
-const MOUSE_INFLUENCE = 0.15;
-const GLOW_INTENSITY = 15;
-const TRAIL_OPACITY = 0.08;
-const FIELD_OF_VIEW = 400;
-const DEPTH_RANGE = 2000;
+// --- Configuration ---
+// Reduced for better performance on a wider range of devices.
+const PARTICLE_COUNT = 300;
+// Base speed of particles moving towards the viewer.
+const BASE_SPEED = 0.2;
+// Speed when the user interacts (mouse down).
+const BOOST_SPEED = 2;
+// How much the particle field shifts based on mouse position (parallax effect).
+const MOUSE_INFLUENCE = 0.03;
+// Intensity of the particle's neon glow.
+const GLOW_INTENSITY = 10;
+// Opacity of the motion trail effect.
+const TRAIL_OPACITY = 0.1;
+// Field of view for the 3D projection. Affects perspective.
+const FIELD_OF_VIEW = 300;
 
-// Enhanced color palette with more vibrant options
+// A vibrant, high-contrast color palette for the neon balls.
 const PARTICLE_COLORS = [
   "#00D4FF", "#FF6B9D", "#C3F73A", "#FFB800", "#8B5CF6",
   "#06FFA5", "#FF4081", "#00E5FF", "#FFAB00", "#7C4DFF"
 ];
 
-// Particle class for better organization and performance
+// --- Particle Class ---
+// Simplified for performance, focusing on core properties.
 class Particle {
   x: number;
   y: number;
   z: number;
   color: string;
-  baseX: number;
-  baseY: number;
-  velocity: { x: number; y: number };
   size: number;
-  pulsePhase: number;
 
-  constructor(canvasWidth: number, canvasHeight: number) {
-    this.reset(canvasWidth, canvasHeight);
-    this.velocity = {
-      x: (Math.random() - 0.5) * 0.02,
-      y: (Math.random() - 0.5) * 0.02
-    };
-    this.size = Math.random() * 2 + 1;
-    this.pulsePhase = Math.random() * Math.PI * 2;
+  constructor(canvasWidth: number) {
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+    this.color = '';
+    this.size = 0;
+    this.reset(canvasWidth);
   }
 
-  reset(canvasWidth: number, canvasHeight: number) {
-    this.x = Math.random() * DEPTH_RANGE - DEPTH_RANGE / 2;
-    this.y = Math.random() * DEPTH_RANGE - DEPTH_RANGE / 2;
-    this.z = Math.random() * canvasWidth + canvasWidth;
-    this.baseX = this.x;
-    this.baseY = this.y;
+  // Resets a particle to a new random position in 3D space.
+  reset(canvasWidth: number) {
+    this.x = Math.random() * 2000 - 1000;
+    this.y = Math.random() * 2000 - 1000;
+    this.z = Math.random() * canvasWidth;
     this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
+    this.size = Math.random() * 2.5 + 0.5;
   }
 
-  update(speed: number, mouseX: number, mouseY: number, centerX: number, centerY: number, time: number) {
-    // Move towards camera
+  // Updates the particle's position.
+  update(speed: number) {
     this.z -= speed;
-
-    // Add subtle floating motion
-    this.x = this.baseX + Math.sin(time * 0.001 + this.pulsePhase) * 20;
-    this.y = this.baseY + Math.cos(time * 0.0008 + this.pulsePhase) * 15;
-
-    // Mouse influence with distance-based falloff
-    const scale = FIELD_OF_VIEW / (FIELD_OF_VIEW + this.z);
-    const screenX = this.x * scale + centerX;
-    const screenY = this.y * scale + centerY;
-    
-    const dx = mouseX - screenX;
-    const dy = mouseY - screenY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const maxInfluence = 150;
-    
-    if (distance < maxInfluence) {
-      const force = (1 - distance / maxInfluence) * MOUSE_INFLUENCE;
-      this.x += dx * force;
-      this.y += dy * force;
-    }
-
-    // Apply velocity for organic movement
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
   }
 
-  draw(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, canvasWidth: number, canvasHeight: number, time: number) {
+  // Draws the particle on the canvas.
+  draw(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, canvasWidth: number) {
+    // Project the 3D position to a 2D screen coordinate.
     const scale = FIELD_OF_VIEW / (FIELD_OF_VIEW + this.z);
     const screenX = this.x * scale + centerX;
     const screenY = this.y * scale + centerY;
-    
-    // Skip if off-screen with buffer
-    if (screenX < -50 || screenX > canvasWidth + 50 || screenY < -50 || screenY > canvasHeight + 50) {
+
+    // Skip drawing if the particle is off-screen.
+    if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > window.innerHeight) {
       return;
     }
-
-    // Dynamic size based on depth and pulse
+    
+    // Calculate size and opacity based on depth.
     const depthFactor = Math.max(0, (1 - this.z / canvasWidth));
-    const pulse = Math.sin(time * 0.003 + this.pulsePhase) * 0.3 + 0.7;
-    const radius = Math.max(0.5, depthFactor * this.size * 3 * pulse);
+    const radius = depthFactor * this.size;
     
-    // Enhanced glow effect
-    const alpha = depthFactor * 0.9 + 0.1;
-    const glowSize = GLOW_INTENSITY * depthFactor;
-    
-    // Outer glow
-    ctx.beginPath();
-    ctx.fillStyle = this.color + '20';
-    ctx.shadowBlur = glowSize * 2;
-    ctx.shadowColor = this.color;
-    ctx.arc(screenX, screenY, radius * 3, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Inner glow
-    ctx.beginPath();
-    ctx.fillStyle = this.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
-    ctx.shadowBlur = glowSize;
-    ctx.shadowColor = this.color;
-    ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Core particle
+    // Simplified drawing with a single path and shadow for a performant glow effect.
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.shadowBlur = glowSize * 0.5;
-    ctx.arc(screenX, screenY, radius * 0.6, 0, Math.PI * 2);
+    ctx.globalAlpha = depthFactor * 0.8 + 0.1;
+    ctx.shadowBlur = GLOW_INTENSITY * depthFactor;
+    ctx.shadowColor = this.color;
+    ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
     ctx.fill();
   }
 }
 
+// --- React Component ---
 export default function EnhancedParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePosition = useRef({ x: 0, y: 0 });
   const isMouseDown = useRef(false);
-  const lastTime = useRef(0);
+  const animationFrameId = useRef<number>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    // Using { alpha: false } can improve performance as the browser doesn't need to blend with page content.
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    let canvasWidth = window.innerWidth;
-    let canvasHeight = window.innerHeight;
     let particles: Particle[] = [];
-    let animationFrameId: number;
-
-    // Performance optimization
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
 
     const handleResize = () => {
-      canvasWidth = window.innerWidth;
-      canvasHeight = window.innerHeight;
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-      particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle(canvasWidth, canvasHeight));
+      const { innerWidth: w, innerHeight: h } = window;
+      canvas.width = w;
+      canvas.height = h;
+      particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle(w));
     };
 
     handleResize();
@@ -160,59 +115,40 @@ export default function EnhancedParticleCanvas() {
       }
     };
     
-    const handleMouseDown = () => { 
-      isMouseDown.current = true;
-      canvas.style.cursor = 'grabbing';
-    };
-    
-    const handleMouseUp = () => { 
-      isMouseDown.current = false;
-      canvas.style.cursor = 'grab';
-    };
+    const handleMouseDown = () => { isMouseDown.current = true; };
+    const handleMouseUp = () => { isMouseDown.current = false; };
 
-    // Enhanced animation loop with time-based animations
-    const animate = (currentTime: number) => {
-      const deltaTime = currentTime - lastTime.current;
-      lastTime.current = currentTime;
+    const animate = () => {
+      // Clear the canvas with a semi-transparent black for a trailing effect.
+      ctx.fillStyle = `rgba(0, 0, 0, ${TRAIL_OPACITY})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Dynamic trail effect based on speed
-      const trailIntensity = isMouseDown.current ? TRAIL_OPACITY * 0.5 : TRAIL_OPACITY;
-      ctx.fillStyle = `rgba(0, 0, 0, ${trailIntensity})`;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      // Reset canvas context properties that change per particle.
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1.0;
 
       const currentSpeed = isMouseDown.current ? BOOST_SPEED : BASE_SPEED;
-      const centerX = canvasWidth / 2;
-      const centerY = canvasHeight / 2;
+      
+      // Calculate a global offset based on mouse position for a parallax effect.
+      const mouseOffsetX = (mousePosition.current.x - canvas.width / 2) * MOUSE_INFLUENCE;
+      const mouseOffsetY = (mousePosition.current.y - canvas.height / 2) * MOUSE_INFLUENCE;
+      
+      const centerX = canvas.width / 2 + mouseOffsetX;
+      const centerY = canvas.height / 2 + mouseOffsetY;
 
-      // Smooth mouse following
-      const smoothing = 0.1;
-      const targetX = mousePosition.current.x;
-      const targetY = mousePosition.current.y;
-
-      particles.forEach(particle => {
-        particle.update(currentSpeed, targetX, targetY, centerX, centerY, currentTime);
-
-        // Reset particle if it's too close or too far
-        if (particle.z <= 0 || particle.z > canvasWidth * 2) {
-          particle.reset(canvasWidth, canvasHeight);
-        }
-
-        particle.draw(ctx, centerX, centerY, canvasWidth, canvasHeight, currentTime);
+      particles.forEach(p => {
+        p.update(currentSpeed);
+        // Reset particle when it moves behind the camera.
+        if (p.z <= 0) p.reset(canvas.width);
+        p.draw(ctx, centerX, centerY, canvas.width);
       });
 
-      // Add subtle screen-wide glow effect when boosting
-      if (isMouseDown.current) {
-        ctx.fillStyle = 'rgba(0, 212, 255, 0.02)';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameId.current = requestAnimationFrame(animate);
     };
 
-    // Start animation
-    requestAnimationFrame(animate);
+    animationFrameId.current = requestAnimationFrame(animate);
 
-    // Event listeners
+    // --- Event Listeners and Cleanup ---
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handlePointerMove);
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
@@ -221,11 +157,8 @@ export default function EnhancedParticleCanvas() {
     window.addEventListener("touchstart", handleMouseDown, { passive: true });
     window.addEventListener("touchend", handleMouseUp);
 
-    // Set initial cursor
-    canvas.style.cursor = 'grab';
-
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handlePointerMove);
       window.removeEventListener("touchmove", handlePointerMove);
@@ -239,7 +172,7 @@ export default function EnhancedParticleCanvas() {
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed inset-0 -z-10 bg-black transition-all duration-300" 
+      className="fixed inset-0 -z-10 bg-black block"
     />
   );
 }
