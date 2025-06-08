@@ -1,44 +1,131 @@
 "use client";
 import { useRef, useEffect } from "react";
 
-// --- Configuration ---
-// The total number of particles to render.
-const PARTICLE_COUNT = 500;
-// The base speed of the particles.
-const BASE_SPEED = 0.1;
-// The speed of the particles when the mouse is held down.
-const BOOST_SPEED = 4;
-// A vibrant color palette for the particles.
-const PARTICLE_COLORS = ["#69D2E7", "#A7DBD8", "#E0E4CC", "#F38630", "#FA6900"];
-// The field of view for the 3D projection.
-const FIELD_OF_VIEW = 300;
+// Enhanced Configuration
+const PARTICLE_COUNT = 800;
+const BASE_SPEED = 0.12;
+const BOOST_SPEED = 5;
+const MOUSE_INFLUENCE = 0.15;
+const GLOW_INTENSITY = 15;
+const TRAIL_OPACITY = 0.08;
+const FIELD_OF_VIEW = 400;
+const DEPTH_RANGE = 2000;
 
+// Enhanced color palette with more vibrant options
+const PARTICLE_COLORS = [
+  "#00D4FF", "#FF6B9D", "#C3F73A", "#FFB800", "#8B5CF6",
+  "#06FFA5", "#FF4081", "#00E5FF", "#FFAB00", "#7C4DFF"
+];
 
-/**
- * @typedef {object} Particle
- * @property {number} x - The x-coordinate in 3D space.
- * @property {number} y - The y-coordinate in 3D space.
- * @property {number} z - The z-coordinate (depth) in 3D space.
- * @property {string} color - The color of the particle.
- */
-type Particle = { x: number; y: number; z: number; color: string };
+// Particle class for better organization and performance
+class Particle {
+  x: number;
+  y: number;
+  z: number;
+  color: string;
+  baseX: number;
+  baseY: number;
+  velocity: { x: number; y: number };
+  size: number;
+  pulsePhase: number;
 
-/**
- * Creates a single particle with random properties.
- * @param {number} canvasWidth - The width of the canvas.
- * @returns {Particle} A new particle object.
- */
-const createParticle = (canvasWidth: number): Particle => ({
-  x: Math.random() * 2000 - 1000,
-  y: Math.random() * 2000 - 1000,
-  z: Math.random() * canvasWidth,
-  color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-});
+  constructor(canvasWidth: number, canvasHeight: number) {
+    this.reset(canvasWidth, canvasHeight);
+    this.velocity = {
+      x: (Math.random() - 0.5) * 0.02,
+      y: (Math.random() - 0.5) * 0.02
+    };
+    this.size = Math.random() * 2 + 1;
+    this.pulsePhase = Math.random() * Math.PI * 2;
+  }
 
-export default function ParticleCanvas() {
+  reset(canvasWidth: number, canvasHeight: number) {
+    this.x = Math.random() * DEPTH_RANGE - DEPTH_RANGE / 2;
+    this.y = Math.random() * DEPTH_RANGE - DEPTH_RANGE / 2;
+    this.z = Math.random() * canvasWidth + canvasWidth;
+    this.baseX = this.x;
+    this.baseY = this.y;
+    this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
+  }
+
+  update(speed: number, mouseX: number, mouseY: number, centerX: number, centerY: number, time: number) {
+    // Move towards camera
+    this.z -= speed;
+
+    // Add subtle floating motion
+    this.x = this.baseX + Math.sin(time * 0.001 + this.pulsePhase) * 20;
+    this.y = this.baseY + Math.cos(time * 0.0008 + this.pulsePhase) * 15;
+
+    // Mouse influence with distance-based falloff
+    const scale = FIELD_OF_VIEW / (FIELD_OF_VIEW + this.z);
+    const screenX = this.x * scale + centerX;
+    const screenY = this.y * scale + centerY;
+    
+    const dx = mouseX - screenX;
+    const dy = mouseY - screenY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxInfluence = 150;
+    
+    if (distance < maxInfluence) {
+      const force = (1 - distance / maxInfluence) * MOUSE_INFLUENCE;
+      this.x += dx * force;
+      this.y += dy * force;
+    }
+
+    // Apply velocity for organic movement
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+  }
+
+  draw(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, canvasWidth: number, canvasHeight: number, time: number) {
+    const scale = FIELD_OF_VIEW / (FIELD_OF_VIEW + this.z);
+    const screenX = this.x * scale + centerX;
+    const screenY = this.y * scale + centerY;
+    
+    // Skip if off-screen with buffer
+    if (screenX < -50 || screenX > canvasWidth + 50 || screenY < -50 || screenY > canvasHeight + 50) {
+      return;
+    }
+
+    // Dynamic size based on depth and pulse
+    const depthFactor = Math.max(0, (1 - this.z / canvasWidth));
+    const pulse = Math.sin(time * 0.003 + this.pulsePhase) * 0.3 + 0.7;
+    const radius = Math.max(0.5, depthFactor * this.size * 3 * pulse);
+    
+    // Enhanced glow effect
+    const alpha = depthFactor * 0.9 + 0.1;
+    const glowSize = GLOW_INTENSITY * depthFactor;
+    
+    // Outer glow
+    ctx.beginPath();
+    ctx.fillStyle = this.color + '20';
+    ctx.shadowBlur = glowSize * 2;
+    ctx.shadowColor = this.color;
+    ctx.arc(screenX, screenY, radius * 3, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Inner glow
+    ctx.beginPath();
+    ctx.fillStyle = this.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+    ctx.shadowBlur = glowSize;
+    ctx.shadowColor = this.color;
+    ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Core particle
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = glowSize * 0.5;
+    ctx.arc(screenX, screenY, radius * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+export default function EnhancedParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePosition = useRef({ x: 0, y: 0 });
   const isMouseDown = useRef(false);
+  const lastTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,24 +139,20 @@ export default function ParticleCanvas() {
     let particles: Particle[] = [];
     let animationFrameId: number;
 
-    /**
-     * Resizes the canvas and re-initializes particles.
-     */
+    // Performance optimization
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
     const handleResize = () => {
       canvasWidth = window.innerWidth;
       canvasHeight = window.innerHeight;
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
-      particles = Array.from({ length: PARTICLE_COUNT }, () => createParticle(canvasWidth));
+      particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle(canvasWidth, canvasHeight));
     };
 
-    // Initial setup
     handleResize();
 
-    /**
-     * Updates the mouse position from mouse or touch events.
-     * @param {MouseEvent | TouchEvent} e - The event object.
-     */
     const handlePointerMove = (e: MouseEvent | TouchEvent) => {
       const target = "touches" in e ? e.touches[0] : e;
       if (target) {
@@ -77,62 +160,59 @@ export default function ParticleCanvas() {
       }
     };
     
-    const handleMouseDown = () => { isMouseDown.current = true; };
-    const handleMouseUp = () => { isMouseDown.current = false; };
+    const handleMouseDown = () => { 
+      isMouseDown.current = true;
+      canvas.style.cursor = 'grabbing';
+    };
+    
+    const handleMouseUp = () => { 
+      isMouseDown.current = false;
+      canvas.style.cursor = 'grab';
+    };
 
+    // Enhanced animation loop with time-based animations
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime.current;
+      lastTime.current = currentTime;
 
-    /**
-     * The main animation loop.
-     */
-    const animate = () => {
-      // Create a trailing effect by filling the canvas with a semi-transparent color
-      ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+      // Dynamic trail effect based on speed
+      const trailIntensity = isMouseDown.current ? TRAIL_OPACITY * 0.5 : TRAIL_OPACITY;
+      ctx.fillStyle = `rgba(0, 0, 0, ${trailIntensity})`;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
       const currentSpeed = isMouseDown.current ? BOOST_SPEED : BASE_SPEED;
       const centerX = canvasWidth / 2;
       const centerY = canvasHeight / 2;
-      
-      // Move mouse influence point towards the actual mouse position for a smoother follow effect
-      const targetX = (mousePosition.current.x - centerX);
-      const targetY = (mousePosition.current.y - centerY);
 
+      // Smooth mouse following
+      const smoothing = 0.1;
+      const targetX = mousePosition.current.x;
+      const targetY = mousePosition.current.y;
 
-      particles.forEach(p => {
-        // Update particle position
-        p.z -= currentSpeed;
+      particles.forEach(particle => {
+        particle.update(currentSpeed, targetX, targetY, centerX, centerY, currentTime);
 
-        // Reset particle if it's moved behind the viewer
-        if (p.z <= 0) {
-          Object.assign(p, createParticle(canvasWidth));
+        // Reset particle if it's too close or too far
+        if (particle.z <= 0 || particle.z > canvasWidth * 2) {
+          particle.reset(canvasWidth, canvasHeight);
         }
 
-        // Project 3D coordinates to 2D screen
-        const scale = FIELD_OF_VIEW / (FIELD_OF_VIEW + p.z);
-        const screenX = p.x * scale + centerX + targetX * 0.1 * scale;
-        const screenY = p.y * scale + centerY + targetY * 0.1 * scale;
-        const radius = Math.max(0, (1 - p.z / canvasWidth) * 4);
-        
-        // Skip drawing if particle is off-screen
-        if (screenX < 0 || screenX > canvasWidth || screenY < 0 || screenY > canvasHeight) {
-            return;
-        }
-
-        // Draw the particle with a glow effect
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = p.color;
-        ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
-        ctx.fill();
+        particle.draw(ctx, centerX, centerY, canvasWidth, canvasHeight, currentTime);
       });
+
+      // Add subtle screen-wide glow effect when boosting
+      if (isMouseDown.current) {
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.02)';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    // Start animation
+    requestAnimationFrame(animate);
 
-    // --- Event Listeners and Cleanup ---
+    // Event listeners
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handlePointerMove);
     window.addEventListener("touchmove", handlePointerMove, { passive: true });
@@ -141,6 +221,8 @@ export default function ParticleCanvas() {
     window.addEventListener("touchstart", handleMouseDown, { passive: true });
     window.addEventListener("touchend", handleMouseUp);
 
+    // Set initial cursor
+    canvas.style.cursor = 'grab';
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -154,5 +236,10 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 -z-10 bg-black" />;
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="fixed inset-0 -z-10 bg-black transition-all duration-300" 
+    />
+  );
 }
