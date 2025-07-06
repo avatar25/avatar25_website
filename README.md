@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shiben's Personal Website
 
-## Getting Started
+Welcome to my personal website! I'm an infosec engineer, meditation enthusiast, and builder of cool things. This site showcases my work, thoughts, and journey.
 
-First, run the development server:
+## ✨ Features
 
+- **Personal Portfolio**: Clean, modern homepage with animated particle effects
+- **Blog Section**: Markdown-based blog with meditation insights and personal reflections
+- **Responsive Design**: Beautiful UI that works on all devices
+- **Navigation**: Seamless navigation between home and blog sections
+- **Modern Tech Stack**: Built with Next.js 15, TypeScript, and Tailwind CSS
+
+## 🚀 Getting Started
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/avatar25/avatar25_website.git
+cd avatar25_website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js app router
+│   ├── blog/              # Blog pages
+│   │   ├── [slug]/        # Individual blog posts
+│   │   └── page.tsx       # Blog index
+│   ├── layout.tsx         # Root layout with navigation
+│   └── page.tsx           # Homepage
+├── components/            # React components
+│   ├── Navigation.tsx     # Navigation bar
+│   ├── ParticleCanvas.tsx # Animated background
+│   └── TVStatic.tsx       # Static effect component
+└── content/              # Blog content
+    └── blog/             # Markdown blog posts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Content**: Markdown with gray-matter parsing
+- **Deployment**: Vercel
 
-## Deploy on Vercel
+## 📝 Blog
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The blog section features:
+- Markdown-based content management
+- Automatic post listing and sorting
+- Responsive typography with proper markdown rendering
+- Clean, readable design
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎨 Design
+
+- **Color Scheme**: Cyan, fuchsia, and yellow gradient theme
+- **Typography**: Geist font family
+- **Animations**: Particle effects and smooth transitions
+- **Layout**: Centered, minimalist design with glassmorphism effects
+
+## 🔗 Links
+
+- **GitHub**: [@avatar25](https://github.com/avatar25)
+- **LinkedIn**: [shibenc](https://www.linkedin.com/in/shibenc/)
+- **Instagram**: [@supernova_shiben25](https://www.instagram.com/supernova_shiben25)
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
