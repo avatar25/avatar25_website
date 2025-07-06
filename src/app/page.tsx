@@ -1,10 +1,11 @@
 import ParticleCanvas from "@/components/TVStatic";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <>
       <ParticleCanvas />
-      <main className="relative flex min-h-screen flex-col items-center justify-center text-center px-6">
+      <main className="relative flex min-h-screen flex-col items-center justify-center text-center px-6 pt-20">
         <h1 className="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-300 animate-pulse">
           Hi, I’m Shiben 👋
         </h1>
@@ -12,7 +13,7 @@ export default function Home() {
           Infosec engineer · Meditation nerd · Building cool stuff one vibe at a time.
         </p>
         <div className="mt-6 flex gap-6 justify-center">
-          <a
+          <Link
             href="/blog"
             className="text-slate-200/80 hover:text-yellow-300 transition-colors text-2xl"
             aria-label="Blog"
@@ -20,7 +21,7 @@ export default function Home() {
             <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
             </svg>
-          </a>
+          </Link>
           <a
             href="https://github.com/avatar25"
             target="_blank"

@@ -8,7 +8,7 @@ export const metadata = {
 export default function BlogPage() {
   const posts = getSortedPosts();
   return (
-    <main className="mx-auto max-w-3xl py-16 px-6">
+    <main className="mx-auto max-w-3xl py-16 px-6 pt-20">
       <h1 className="text-4xl font-bold mb-8">Blog</h1>
       <ul className="space-y-4">
         {posts.map((post) => (
