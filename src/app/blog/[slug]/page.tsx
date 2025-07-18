@@ -30,9 +30,9 @@ export default async function PostPage({ params }: PostPageProps) {
             h1: (props) => <h1 {...props} style={{ color: '#D9822B' }} />,
             h2: (props) => <h2 {...props} style={{ color: '#D9822B' }} />,
             h3: (props) => <h3 {...props} style={{ color: '#D9822B' }} />,
-            ul: ({ node, ...props }) => <ul {...props} className="list-disc list-inside" />,
-            ol: ({ node, ...props }) => <ol {...props} className="list-decimal list-inside" />,
-            li: ({ node, ...props }) => <li {...props} className="my-1" />,
+            ul: (props) => <ul {...props} className="list-disc list-inside" />,
+            ol: (props) => <ol {...props} className="list-decimal list-inside" />,
+            li: (props) => <li {...props} className="my-1" />,
           }}
         >
           {content}
