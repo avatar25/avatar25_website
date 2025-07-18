@@ -1,5 +1,6 @@
 import { getPostBySlug } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
