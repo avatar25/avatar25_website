@@ -46,7 +46,7 @@ But it's not a silver bullet. Sometimes, if the pure awareness method is not wor
 ## Meditation is about the body too
 You cannot have a good meditation session if your body is not in a good state. I found exercise help me lock into that state where meditation feels effortless.
 
-Order of things that mess up meditation (in order):
+### Order of things that mess up meditation (in order):
 1. Bad gut health
 2. Some sort of bodily pain or discomfort.
 3. Temperature is too hot or too cold.
