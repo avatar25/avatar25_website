@@ -11,35 +11,35 @@ Below are what I lovingly call my **Meditation Amendments**. They aren't command
 ---
 
 ## Meditation Amendments
-1. Posture is everything — Keep the spine straight as if not doing so will kill you. 
-2. Keep everything relaxed — Surrender your body to the gravity. Any bodily tension or stress takes away the mental space. 
-3. Awareness over attention — The point of meditation is to be aware of what’s going inside you without reaction.
-4. Don’t focus on only one bodily sensation — Anchoring your attention to one bodily sensation means the effects of meditation is sharp but short throughout the day.
+1. Posture is everything. Keep the spine straight as if not doing so will kill you. 
+2. Keep everything relaxed. Surrender your body to the gravity. Any bodily tension or stress takes away the mental space. 
+3. Awareness over attention. The point of meditation is to be aware of what’s going inside you without reaction.
+4. Don’t focus on only one bodily sensation. Anchoring your attention to one bodily sensation means the effects of meditation is sharp but short throughout the day.
 5. Focus on calming yourself first, then remain calm, and get to the anchor.
 6. Zero expectations. Don't expect a result post session. It's a process. Thinking of the end game ruins the process.
 
 ## My experiments with different anchors
-1. Breath
-    -
-    This is the most common way of doing mindful meditation. The idea is to bring back attention to your breath gently whenever your attention deviates. But I personally fall into the category of people who cannot be just aware of their breaths without ending up controlling it. I think a lot of people quit meditation after a couple of sessions since they get introduced to meditation via this method which is arguably not easy if you fall into that category I described. 
-2. Touch
-    - 
-    Using your thumb touch as an anchor is great. It worked wonderfully for me for a long time but it has its downsides. The biggest one is becoming dependent on it. Since this method gives you a boost of attention post session, it makes you feel guilty if you miss a session. It’s like forgetting to take your attention meds. What this later entails is that you are focusing on how well you are doing the session when you are doing it, instead of being aware and attentive. 
-3. Sound
-    - 
-    I used an app to play birds and bells sounds and kept the sound itself as the anchor. The problem with this method is that it can become mentally too engaging and the meditation becomes a mental exercise to pay attention to sound. If session goes well, you are more attentive especially to sound. Reliance and dependency becomes an issue because this leans more towards mental exercise rather than meditation. Not sustainable.
-4. Pure awareness
-    - 
-    There’s no anchor here. The anchors are that you must ensure these things are constant:
-    - Spine is straight, all muscles are relaxed and calm, you are not sleeping but attentive. 
-    - A thought comes? Observe while being attentive. 
-    - A bodily sensation? Observe only. 
-    - Your body+mind becomes an automatic machine that ensures those 3 baselines states are maintained. 
-    - This is by far the most easy to do yet the most powerful technique for me personally. 
-    - Missed a session? Doesn’t matter. Because this is not an exercise. The attention is gained naturally by keeping spine straight and not using an anchor. 
+
+### Breath
+This is the most common way of doing mindful meditation. The idea is to bring back attention to your breath gently whenever your attention deviates. But I personally fall into the category of people who cannot be just aware of their breaths without ending up controlling it. I think a lot of people quit meditation after a couple of sessions since they get introduced to meditation via this method which is arguably not easy if you fall into that category I described. 
+
+### Touch
+Using your thumb touch as an anchor is great. It worked wonderfully for me for a long time but it has its downsides. The biggest one is becoming dependent on it. Since this method gives you a boost of attention post session, it makes you feel guilty if you miss a session. It’s like forgetting to take your attention meds. What this later entails is that you are focusing on how well you are doing the session when you are doing it, instead of being aware and attentive. 
+
+### Sound
+I used an app to play birds and bells sounds and kept the sound itself as the anchor. The problem with this method is that it can become mentally too engaging and the meditation becomes a mental exercise to pay attention to sound. If session goes well, you are more attentive especially to sound. Reliance and dependency becomes an issue because this leans more towards mental exercise rather than meditation. Not sustainable.
+
+### Pure awareness
+There’s no anchor here. The anchors are that you must ensure these things are constant:
+- Spine is straight, all muscles are relaxed and calm, you are not sleeping but attentive. 
+- A thought comes? Observe while being attentive. 
+- A bodily sensation? Observe only. 
+- Your body+mind becomes an automatic machine that ensures those 3 baselines states are maintained. 
+- This is by far the most easy to do yet the most powerful technique for me personally. 
+- Missed a session? Doesn’t matter. Because this is not an exercise. The attention is gained naturally by keeping spine straight and not using an anchor. 
 
 
-Winner: Pure awareness.
+**Winner**: Pure awareness.
 
 But it's not a silver bullet. Sometimes, if the pure awareness method is not working in a row for couple of days, you start to question it. It's normal and that's why sometimes, getting back to an achor like thumb touch or sound is a good idea.
 
@@ -64,4 +64,3 @@ I do unguided. Beginners can start with guided but pure raw awareness in a silen
 ## Final Notes
 Meditation is a high interest rate phenomenon. The effects of meditation are not linear. They build up. Miss a day? No big deal but don't miss entire week. Like a lot of things in life, consistency is key. Use an app that builds a streak of number of days you have meditated. It's like having a subconscious Duolingo bird that guilts you into staying consistent every day.
 Meditation won't make you a billionaire (I wish it did), but it will make you someone who can handle stress, tension, and emotions better. It builds a strong mental foundation that supports you in achieving your dreams.
-
